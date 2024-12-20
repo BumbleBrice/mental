@@ -5,31 +5,90 @@ class MentalCalcApp {
         this.currentProblem = null;
         this.difficulty = {
             min: 0,
-            max: 10,
-            operations: ['+']
+            max: 9,
+            operations: ['+'],
+            digits: {
+                num1: 1,
+                num2: 1
+            }
         };
         this.message = '';
-        this.messageType = ''; // 'success' ou 'error'
+        this.messageType = '';
+        this.operationPoints = {
+            '+': 1,
+            '-': 2,
+            '*': 3,
+            '/': 4
+        };
     }
 
     updateDifficulty() {
-        if (this.score >= 5) {
-            this.difficulty.max = 20;
-            this.difficulty.operations = ['+', '-'];
+        if (this.score <= 100) { // Palier 1
+            this.difficulty = {
+                min: 0,
+                max: 9,
+                operations: ['+'],
+                digits: { num1: 1, num2: 1 }
+            };
         }
-        if (this.score >= 10) {
-            this.difficulty.max = 50;
-            this.difficulty.operations = ['+', '-', '*'];
+        else if (this.score <= 200) { // Palier 2
+            this.difficulty = {
+                min: 0,
+                max: 9,
+                operations: ['+', '-'],
+                digits: { num1: 1, num2: 1 }
+            };
         }
-        if (this.score >= 15) {
-            this.difficulty.max = 100;
+        else if (this.score <= 300) { // Palier 3
+            this.difficulty = {
+                min: 0,
+                max: 99,
+                operations: ['+', '-'],
+                digits: { num1: 2, num2: 1 }
+            };
+        }
+        else if (this.score <= 400) { // Palier 4
+            this.difficulty = {
+                min: 0,
+                max: 99,
+                operations: ['+', '-'],
+                digits: { num1: 2, num2: 2 }
+            };
+        }
+        else if (this.score <= 500) { // Palier 5
+            this.difficulty = {
+                min: 0,
+                max: 99,
+                operations: ['+', '-', '*'],
+                digits: { num1: 2, num2: 1 }
+            };
+        }
+        else if (this.score <= 600) { // Palier 6
+            this.difficulty = {
+                min: 0,
+                max: 99,
+                operations: ['+', '-', '*'],
+                digits: { num1: 2, num2: 2 }
+            };
         }
     }
 
     generateProblem() {
-        const num1 = Math.floor(Math.random() * (this.difficulty.max - this.difficulty.min)) + this.difficulty.min;
-        const num2 = Math.floor(Math.random() * (this.difficulty.max - this.difficulty.min)) + this.difficulty.min;
+        let num1, num2;
         const operation = this.difficulty.operations[Math.floor(Math.random() * this.difficulty.operations.length)];
+        
+        // Génération des nombres selon le nombre de chiffres requis
+        if (this.difficulty.digits.num1 === 1) {
+            num1 = Math.floor(Math.random() * 10);
+        } else {
+            num1 = Math.floor(Math.random() * 90) + 10; // 10 à 99
+        }
+        
+        if (this.difficulty.digits.num2 === 1) {
+            num2 = Math.floor(Math.random() * 10);
+        } else {
+            num2 = Math.floor(Math.random() * 90) + 10; // 10 à 99
+        }
         
         let answer;
         switch (operation) {
@@ -37,6 +96,8 @@ class MentalCalcApp {
                 answer = num1 + num2;
                 break;
             case '-':
+                // Pour la soustraction, s'assurer que num1 > num2
+                if (num1 < num2) [num1, num2] = [num2, num1];
                 answer = num1 - num2;
                 break;
             case '*':
@@ -57,6 +118,7 @@ class MentalCalcApp {
         const template = document.createElement('template');
         
         this.currentProblem = this.generateProblem();
+        const level = Math.min(6, Math.floor(this.score / 100) + 1);
         
         template.innerHTML = `
             <div class="game-container">
@@ -68,9 +130,11 @@ class MentalCalcApp {
                 ` : ''}
                 <div class="score">Score: ${this.score}</div>
                 <div class="difficulty-info">
-                    Niveau: ${Math.floor(this.score/5) + 1}
-                    (Nombres jusqu'à ${this.difficulty.max}, 
-                    Opérations: ${this.difficulty.operations.join(', ')})
+                    Niveau: ${level}/6
+                    (${this.difficulty.operations.join(', ')})
+                </div>
+                <div class="points-info">
+                    Points par opération: + (1pt), - (2pts), × (3pts)
                 </div>
                 <div class="problem">
                     ${this.currentProblem.num1} ${this.currentProblem.operation} ${this.currentProblem.num2} = ?
@@ -102,9 +166,10 @@ class MentalCalcApp {
         const userAnswer = parseInt(answerInput.value);
         
         if (userAnswer === this.currentProblem.answer) {
-            this.score++;
+            const points = this.operationPoints[this.currentProblem.operation];
+            this.score += points;
             this.updateDifficulty();
-            this.message = 'Correct !';
+            this.message = `Correct ! +${points} points`;
             this.messageType = 'success';
         } else {
             this.message = `Incorrect ! La réponse était ${this.currentProblem.answer}`;
@@ -113,12 +178,6 @@ class MentalCalcApp {
         
         answerInput.value = '';
         this.render();
-        
-        // Effacer le message après 2 secondes
-        setTimeout(() => {
-            this.message = '';
-            this.render();
-        }, 2000);
     }
 
     init() {
