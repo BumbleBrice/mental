@@ -1,7 +1,7 @@
 class MentalCalcApp {
     constructor() {
         this.container = document.getElementById('app');
-        this.score = 0;
+        this.score = this.loadScore();
         this.currentProblem = null;
         this.difficulty = {
             min: 0,
@@ -20,6 +20,24 @@ class MentalCalcApp {
             '*': 3,
             '/': 4
         };
+        this.updateDifficulty();
+        this.titles = {
+            1: "Apprenti Calculateur",
+            2: "Jongleur de Chiffres",
+            3: "Maître des Additions",
+            4: "Virtuose des Opérations",
+            5: "Seigneur des Multiplications",
+            6: "Grand Sage des Mathématiques"
+        };
+    }
+
+    loadScore() {
+        const savedScore = localStorage.getItem('mentalCalcScore');
+        return savedScore ? parseInt(savedScore) : 0;
+    }
+
+    saveScore() {
+        localStorage.setItem('mentalCalcScore', this.score.toString());
     }
 
     updateDifficulty() {
@@ -113,12 +131,20 @@ class MentalCalcApp {
         };
     }
 
+    getTitleAndLevel() {
+        const level = Math.min(6, Math.floor(this.score / 100) + 1);
+        return {
+            level,
+            title: this.titles[level]
+        };
+    }
+
     render() {
         const fragment = document.createDocumentFragment();
         const template = document.createElement('template');
         
         this.currentProblem = this.generateProblem();
-        const level = Math.min(6, Math.floor(this.score / 100) + 1);
+        const { level, title } = this.getTitleAndLevel();
         
         template.innerHTML = `
             <div class="game-container">
@@ -128,10 +154,13 @@ class MentalCalcApp {
                         ${this.message}
                     </div>
                 ` : ''}
-                <div class="score">Score: ${this.score}</div>
+                <div class="player-info">
+                    <div class="title">${title}</div>
+                    <div class="level">Niveau ${level}/6</div>
+                    <button id="reset" class="reset-button">Réinitialiser</button>
+                </div>
                 <div class="difficulty-info">
-                    Niveau: ${level}/6
-                    (${this.difficulty.operations.join(', ')})
+                    Opérations disponibles: ${this.difficulty.operations.join(', ')}
                 </div>
                 <div class="points-info">
                     Points par opération: + (1pt), - (2pts), × (3pts)
@@ -154,11 +183,13 @@ class MentalCalcApp {
     bindEvents() {
         const checkButton = document.getElementById('check');
         const answerInput = document.getElementById('answer');
+        const resetButton = document.getElementById('reset');
 
         checkButton.addEventListener('click', () => this.checkAnswer());
         answerInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') this.checkAnswer();
         });
+        resetButton.addEventListener('click', () => this.resetScore());
     }
 
     checkAnswer() {
@@ -172,12 +203,26 @@ class MentalCalcApp {
             this.message = `Correct ! +${points} points`;
             this.messageType = 'success';
         } else {
-            this.message = `Incorrect ! La réponse était ${this.currentProblem.answer}`;
+            this.score = Math.max(0, this.score - 1); // Empêche le score d'aller en négatif
+            this.updateDifficulty();
+            this.message = `Incorrect ! La réponse était ${this.currentProblem.answer} (-1 point)`;
             this.messageType = 'error';
         }
         
+        this.saveScore();
         answerInput.value = '';
         this.render();
+    }
+
+    resetScore() {
+        if (confirm('Êtes-vous sûr de vouloir réinitialiser votre score ?')) {
+            this.score = 0;
+            this.saveScore();
+            this.updateDifficulty();
+            this.message = 'Score réinitialisé';
+            this.messageType = 'info';
+            this.render();
+        }
     }
 
     init() {
