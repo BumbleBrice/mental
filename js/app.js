@@ -41,7 +41,7 @@ class MentalCalcApp {
     }
 
     updateDifficulty() {
-        if (this.score <= 100) { // Palier 1
+        if (this.score <= 20) { // Palier 1
             this.difficulty = {
                 min: 0,
                 max: 9,
@@ -49,7 +49,7 @@ class MentalCalcApp {
                 digits: { num1: 1, num2: 1 }
             };
         }
-        else if (this.score <= 20) { // Palier 2
+        else if (this.score <= 50) { // Palier 2
             this.difficulty = {
                 min: 0,
                 max: 9,
@@ -57,7 +57,7 @@ class MentalCalcApp {
                 digits: { num1: 1, num2: 1 }
             };
         }
-        else if (this.score <= 50) { // Palier 3
+        else if (this.score <= 100) { // Palier 3
             this.difficulty = {
                 min: 0,
                 max: 99,
@@ -65,7 +65,7 @@ class MentalCalcApp {
                 digits: { num1: 2, num2: 1 }
             };
         }
-        else if (this.score <= 100) { // Palier 4
+        else if (this.score <= 150) { // Palier 4
             this.difficulty = {
                 min: 0,
                 max: 99,
@@ -73,7 +73,7 @@ class MentalCalcApp {
                 digits: { num1: 2, num2: 2 }
             };
         }
-        else if (this.score <= 150) { // Palier 5
+        else if (this.score <= 200) { // Palier 5
             this.difficulty = {
                 min: 0,
                 max: 99,
@@ -81,7 +81,7 @@ class MentalCalcApp {
                 digits: { num1: 2, num2: 1 }
             };
         }
-        else if (this.score <= 200) { // Palier 6
+        else if (this.score <= 250) { // Palier 6
             this.difficulty = {
                 min: 0,
                 max: 99,
@@ -96,7 +96,7 @@ class MentalCalcApp {
         const operation = this.difficulty.operations[Math.floor(Math.random() * this.difficulty.operations.length)];
         
         // Pour le palier 5, traitement spécial des multiplications
-        if (this.score > 400 && this.score <= 500 && operation === '*') {
+        if (this.score > 150 && this.score <= 200 && operation === '*') {
             // Multiplication à 1 chiffre uniquement
             num1 = Math.floor(Math.random() * 10);
             num2 = Math.floor(Math.random() * 10);
@@ -143,10 +143,12 @@ class MentalCalcApp {
 
     getTitleAndLevel() {
         const level = Math.min(6, Math.floor(this.score / 100) + 1);
-        return {
-            level,
-            title: this.titles[level]
-        };
+        if (this.score <= 20) return { level: 1, title: this.titles[1] };
+        if (this.score <= 50) return { level: 2, title: this.titles[2] };
+        if (this.score <= 100) return { level: 3, title: this.titles[3] };
+        if (this.score <= 150) return { level: 4, title: this.titles[4] };
+        if (this.score <= 200) return { level: 5, title: this.titles[5] };
+        if (this.score <= 250) return { level: 6, title: this.titles[6] };
     }
 
     render() {
@@ -158,7 +160,7 @@ class MentalCalcApp {
         
         template.innerHTML = `
             <div class="game-container">
-                
+                <h1>Calcul Mental</h1>
                 ${this.message ? `
                     <div class="message ${this.messageType}">
                         ${this.message}
