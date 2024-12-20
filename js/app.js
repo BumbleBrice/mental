@@ -95,17 +95,29 @@ class MentalCalcApp {
         let num1, num2;
         const operation = this.difficulty.operations[Math.floor(Math.random() * this.difficulty.operations.length)];
         
-        // Génération des nombres selon le nombre de chiffres requis
-        if (this.difficulty.digits.num1 === 1) {
+        // Pour le palier 5, traitement spécial des multiplications
+        if (this.score > 400 && this.score <= 500 && operation === '*') {
+            // Multiplication à 1 chiffre uniquement
             num1 = Math.floor(Math.random() * 10);
-        } else {
-            num1 = Math.floor(Math.random() * 90) + 10; // 10 à 99
-        }
-        
-        if (this.difficulty.digits.num2 === 1) {
             num2 = Math.floor(Math.random() * 10);
         } else {
-            num2 = Math.floor(Math.random() * 90) + 10; // 10 à 99
+            // Génération normale selon les digits requis
+            if (this.difficulty.digits.num1 === 1) {
+                num1 = Math.floor(Math.random() * 10);
+            } else {
+                num1 = Math.floor(Math.random() * 90) + 10; // 10 à 99
+            }
+            
+            if (this.difficulty.digits.num2 === 1) {
+                num2 = Math.floor(Math.random() * 10);
+            } else {
+                num2 = Math.floor(Math.random() * 90) + 10; // 10 à 99
+            }
+        }
+        
+        // Pour la soustraction, s'assurer que num1 > num2
+        if (operation === '-' && num1 < num2) {
+            [num1, num2] = [num2, num1];
         }
         
         let answer;
@@ -114,8 +126,6 @@ class MentalCalcApp {
                 answer = num1 + num2;
                 break;
             case '-':
-                // Pour la soustraction, s'assurer que num1 > num2
-                if (num1 < num2) [num1, num2] = [num2, num1];
                 answer = num1 - num2;
                 break;
             case '*':
