@@ -49,7 +49,7 @@ class MentalCalcApp {
                 digits: { num1: 1, num2: 1 }
             };
         }
-        else if (this.score <= 200) { // Palier 2
+        else if (this.score <= 20) { // Palier 2
             this.difficulty = {
                 min: 0,
                 max: 9,
@@ -57,7 +57,7 @@ class MentalCalcApp {
                 digits: { num1: 1, num2: 1 }
             };
         }
-        else if (this.score <= 300) { // Palier 3
+        else if (this.score <= 50) { // Palier 3
             this.difficulty = {
                 min: 0,
                 max: 99,
@@ -65,7 +65,7 @@ class MentalCalcApp {
                 digits: { num1: 2, num2: 1 }
             };
         }
-        else if (this.score <= 400) { // Palier 4
+        else if (this.score <= 100) { // Palier 4
             this.difficulty = {
                 min: 0,
                 max: 99,
@@ -73,7 +73,7 @@ class MentalCalcApp {
                 digits: { num1: 2, num2: 2 }
             };
         }
-        else if (this.score <= 500) { // Palier 5
+        else if (this.score <= 150) { // Palier 5
             this.difficulty = {
                 min: 0,
                 max: 99,
@@ -81,7 +81,7 @@ class MentalCalcApp {
                 digits: { num1: 2, num2: 1 }
             };
         }
-        else if (this.score <= 600) { // Palier 6
+        else if (this.score <= 200) { // Palier 6
             this.difficulty = {
                 min: 0,
                 max: 99,
@@ -158,7 +158,7 @@ class MentalCalcApp {
         
         template.innerHTML = `
             <div class="game-container">
-                <h1>Calcul Mental</h1>
+                
                 ${this.message ? `
                     <div class="message ${this.messageType}">
                         ${this.message}
@@ -173,7 +173,7 @@ class MentalCalcApp {
                     Opérations disponibles: ${this.difficulty.operations.join(', ')}
                 </div>
                 <div class="points-info">
-                    Points par opération: + (1pt), - (2pts), × (3pts)
+                    Points par opération: <br> + (1pt), - (2pts), × (3pts)
                 </div>
                 <div class="problem">
                     ${this.currentProblem.num1} ${this.currentProblem.operation} ${this.currentProblem.num2} = ?
