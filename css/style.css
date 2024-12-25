@@ -1,97 +1,266 @@
-.game-container {
-    max-width: 600px;
-    margin: 2rem auto;
+/* Reset CSS */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Import Montserrat depuis Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+
+/* Typographie responsive */
+:root {
+    /* Tailles de base augmentées */
+    --fs-xs: clamp(0.875rem, 2.5vw, 1rem);        /* 14px - 16px */
+    --fs-sm: clamp(1rem, 3vw, 1.25rem);           /* 16px - 20px */
+    --fs-base: clamp(1.25rem, 3.5vw, 1.5rem);     /* 20px - 24px */
+    --fs-md: clamp(1.5rem, 4vw, 1.75rem);         /* 24px - 28px */
+    --fs-lg: clamp(1.75rem, 4.5vw, 2rem);         /* 28px - 32px */
+    --fs-xl: clamp(2rem, 5vw, 2.5rem);            /* 32px - 40px */
+    --fs-2xl: clamp(2.5rem, 6vw, 3rem);           /* 40px - 48px */
+    --fs-3xl: clamp(3.5rem, 7vw, 4rem);           /* 56px - 64px */
+}
+
+html {
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-text-size-adjust: 100%;
     text-align: center;
-    padding: 2rem;
 }
 
-.problem {
-    font-size: 2rem;
-    margin: 2rem 0;
+body {
+    margin: 0;
+    font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
-.answer-input {
-    font-size: 1.5rem;
-    padding: 0.5rem;
-    width: 100px;
-    margin-right: 1rem;
+input, button, textarea, select {
+    font: inherit;
 }
 
 button {
-    font-size: 1.2rem;
-    padding: 0.5rem 1rem;
     cursor: pointer;
-}
-
-.score {
-    font-size: 1.2rem;
-    margin: 1rem 0;
-}
-
-.message {
-    padding: 1rem;
-    margin: 1rem 0;
-    border-radius: 4px;
-    font-weight: bold;
-}
-
-.message.success {
-    background-color: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
-}
-
-.message.error {
-    background-color: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
-}
-
-.reset-button {
-    margin-left: 1rem;
-    padding: 0.25rem 0.5rem;
-    font-size: 0.9rem;
-    background-color: #dc3545;
-    color: white;
     border: none;
-    border-radius: 4px;
-    cursor: pointer;
 }
 
-.reset-button:hover {
-    background-color: #c82333;
-}
+img {
+    max-width: 100%;
+    height: auto;
+} 
 
-.message.info {
-    background-color: #cce5ff;
-    color: #004085;
-    border: 1px solid #b8daff;
-}
-
-.player-info {
-    text-align: center;
-    margin: 1.5rem 0;
-    padding: 1rem;
-    background-color: #f8f9fa;
-    border-radius: 8px;
-    border: 1px solid #dee2e6;
-}
-
-.title {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #2c3e50;
-    margin-bottom: 0.5rem;
+h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin: 1rem;
+    font-size: var(--fs-3xl); /* Pour les calculs */
 }
 
 .level {
-    font-size: 1rem;
-    color: #6c757d;
-    margin-bottom: 0.5rem;
+    font-size: var(--fs-xl);
+
+}
+.title {
+    font-size: var(--fs-2xl);
+    font-weight: 700;
+    transition: color 0.3s ease;
+}
+.problem {
+    font-size: var(--fs-3xl);
+    font-weight: 700;
+    margin: 2rem 0;
+    padding: 1rem;
 }
 
-.difficulty-info {
+.message {
+    font-size: var(--fs-base);
+    padding: 0.5rem;
     margin-bottom: 1rem;
-    color: #495057;
-    font-style: italic;
-} 
+    border-radius: 4px;
+    font-weight: 500;
+    text-align: center;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto 1rem auto;
+}
+
+.message.success {
+    background-color: rgba(0, 180, 0, 0.1);
+    color: rgb(0, 120, 0);
+    border: 1px solid rgb(0, 150, 0);
+}
+
+.message.error {
+    background-color: rgba(255, 0, 0, 0.1);
+    color: rgb(180, 0, 0);
+    border: 1px solid rgb(200, 0, 0);
+}
+
+.points-info {
+    font-size: var(--fs-xs); /* Pour les informations secondaires */
+}
+
+input {
+    font-size: var(--fs-lg); /* Pour l'input de réponse */
+}
+
+button {
+    font-size: var(--fs-base); /* Pour les boutons */
+}
+
+.reset-button {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    width: 40px;
+    height: 40px;
+    padding: 8px;
+    border-radius: 50%;
+    background: transparent;
+    border: 2px solid #FF0000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    color: #FF0000; /* Pour l'icône SVG qui utilise currentColor */
+    transition: all 0.3s ease;
+}
+
+.reset-button:hover {
+    background-color: rgba(255, 0, 0, 0.1);
+    transform: rotate(180deg);
+}
+
+.reset-icon {
+    width: 20px;
+    height: 20px;
+}
+
+/* Level-specific background colors et title colors avec meilleurs contrastes */
+.level-1 {
+    background-color: rgba(255, 0, 0, 0.1);
+}
+.level-1 .title {
+    color: rgb(150, 0, 0); /* Rouge plus foncé */
+}
+
+.level-2 {
+    background-color: rgba(255, 127, 0, 0.1);
+}
+.level-2 .title {
+    color: rgb(150, 75, 0); /* Orange plus foncé */
+}
+
+.level-3 {
+    background-color: rgba(255, 255, 0, 0.1);
+}
+.level-3 .title {
+    color: rgb(120, 120, 0); /* Jaune beaucoup plus foncé pour la lisibilité */
+}
+
+.level-4 {
+    background-color: rgba(0, 255, 0, 0.1);
+}
+.level-4 .title {
+    color: rgb(0, 120, 0); /* Vert plus foncé */
+}
+
+.level-5 {
+    background-color: rgba(0, 0, 255, 0.1);
+}
+.level-5 .title {
+    color: rgb(0, 0, 150); /* Bleu plus foncé */
+}
+
+/* Réinitialisation des couleurs de texte en noir */
+.title,
+.level,
+.problem,
+.difficulty-info,
+.points-info,
+button:not(.reset-button) {
+    color: #000000;
+}
+
+/* Style de base pour le conteneur */
+.game-container {
+    min-height: 100vh;
+    transition: background-color 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* Style du bouton de validation */
+button#check {
+    flex: 0 0 25%;
+    font-size: var(--fs-base);
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
+    background-color: #f0f0f0;
+    border: 2px solid #ddd;
+    font-weight: 600;
+    min-width: 120px;
+    height: 60px;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+}
+
+button#check:hover {
+    background-color: #e0e0e0;
+    transform: translateY(-2px);
+}
+
+button#check:active {
+    transform: translateY(0);
+}
+
+/* Style du conteneur form pour assurer l'alignement */
+.answer-form {
+    display: flex;
+    gap: 1rem;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    align-items: stretch;
+}
+
+/* Style de l'input */
+.answer-input {
+    flex: 0 0 70%;
+    font-size: var(--fs-lg);
+    padding: 0.8rem;
+    border: 2px solid #dee2e6;
+    border-radius: 8px;
+    text-align: center;
+    height: 60px;
+    box-sizing: border-box;
+}
+
+/* Classe pour masquer visuellement le texte tout en le gardant accessible */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.problem {
+    margin-bottom: 0.5rem; /* Réduit l'espace sous le problème */
+}
+
+.message + .answer-form {
+    margin-top: 0; /* Supprime la marge entre le message et le formulaire */
+}
+
+/* Classe pour masquer la div problem */
+.hidden {
+    visibility: hidden; /* Masque l'élément tout en conservant son espace */
+}
