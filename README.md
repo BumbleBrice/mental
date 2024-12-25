@@ -1,1 +1,1 @@
-#Petite application d'aide au calcule mental a partir de la primaire
+#Petite application d'aide au calcul mental a partir de la primaire
